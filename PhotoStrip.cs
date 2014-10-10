@@ -58,8 +58,6 @@ namespace Photobooth
             if (Pictures.Count >= Max) return false;
             Pictures.Add(image);
 
-            Photo(image, Count() - 1);
-
             return true;
         }
 

@@ -15,7 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Nikon;
+using System.Drawing;
+
 
 namespace Photobooth
 {
@@ -27,11 +30,19 @@ namespace Photobooth
         public NikonManager Manager { get; set; }
         public NikonDevice Device { get; set; }
         public PhotoStrip photostrip { get; set; }
+        private DispatcherTimer liveViewTimer;
+        public LiveView _LiveView { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
 
+            // Initialize live view timer
+            liveViewTimer = new DispatcherTimer();
+            liveViewTimer.Tick += new EventHandler(liveViewTimer_Tick);
+            liveViewTimer.Interval = new TimeSpan(0,0,1);
+
+            _LiveView = new LiveView();
             photostrip = new PhotoStrip();
 
             Manager = new NikonManager(@"Type0010.md3");
@@ -39,6 +50,27 @@ namespace Photobooth
             button_takePicture.IsEnabled = false;
 
             Manager.DeviceAdded += new DeviceAddedDelegate(manager_DeviceAdded);
+        }
+
+        public  void liveViewTimer_Tick(object sender, EventArgs e)
+        {
+            // Get live view image
+            NikonLiveViewImage image = null;
+
+            try
+            {
+                image = Device.GetLiveViewImage();
+            }
+            catch (NikonException)
+            {
+                liveViewTimer.Stop();
+            }
+
+            // Set live view image on picture box
+            if (image != null)
+            {
+                LiveImage.Source = LoadImage(image.JpegBuffer);
+            }
         }
 
         private void manager_DeviceAdded(NikonManager sender, NikonDevice device)
@@ -73,6 +105,25 @@ namespace Photobooth
             catch (NikonException ex)
             {
 
+            }
+        }
+
+        private void button_startLiveView(object sender, RoutedEventArgs e)
+        {
+            if (Device == null)
+            {
+                return;
+            }
+            if (Device.LiveViewEnabled)
+            {
+                Device.LiveViewEnabled = false;
+                liveViewTimer.Stop();
+                LiveImage.Source = null;
+            }
+            else
+            {
+                Device.LiveViewEnabled = true;
+                liveViewTimer.Start();
             }
         }
 
