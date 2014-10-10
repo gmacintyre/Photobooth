@@ -27,28 +27,16 @@ namespace Photobooth
         public NikonManager Manager { get; set; }
         public NikonDevice Device { get; set; }
         public PhotoStrip photostrip { get; set; }
-        public List<Image> ImageHolders { get; set; }
-        public ObservableCollection<String> Tests { get; set; }
-        public List<Image> GUIImages { get; set; }
-
-        private MyViewModel _viewModel;
 
         public MainWindow()
         {
-
             InitializeComponent();
 
-            _viewModel = new MyViewModel();
-            this.DataContext = _viewModel;
-            Tests = new ObservableCollection<string>();
-
-
-            photostrip = new PhotoStrip(photoStrip_PhotoAdded, 5);
+            photostrip = new PhotoStrip();
 
             Manager = new NikonManager(@"Type0010.md3");
-            //GUIImages = new List<Image>{MiniImage1,MiniImage2, MiniImage3, MiniImage4, MainImage};
             button_takePicture.Content = "Connect\n Camera";
-            ImageHolders = new List<Image> {};
+            button_takePicture.IsEnabled = false;
 
             Manager.DeviceAdded += new DeviceAddedDelegate(manager_DeviceAdded);
         }
@@ -62,17 +50,6 @@ namespace Photobooth
             button_takePicture.IsEnabled = true;
             button_takePicture.Content = "Start";
             button_takePicture.FontSize = 56;
-
-
-
-            try
-            {
-                int batteryLevel = device.GetInteger(eNkMAIDCapability.kNkMAIDCapability_BatteryLevel);
-                Console.WriteLine("Battery Level: " + batteryLevel);
-            }
-            catch (NikonException ex)
-            {
-            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -82,16 +59,8 @@ namespace Photobooth
 
         private void device_ImageReady(NikonDevice sender, NikonImage image)
         {
-            Tests.Add(image.Number.ToString());
-            Console.WriteLine("Magic");
-
-            
-
-            _viewModel.ListItems = Tests;
-
+            Console.WriteLine("Image Ready");
             photostrip.Push(new Image {Source = LoadImage(image.Buffer)});
-
-           
         }
 
         private void button_takePictureClick(object sender, RoutedEventArgs e)
@@ -125,25 +94,7 @@ namespace Photobooth
             return image;
         }
 
-        public bool photoStrip_PhotoAdded(Image image, int index)
-        {
-
-            //GUIImages[index].Source = image.Source;
-            return false;
-        }
-        public class MyModel
-        {
-            public BitmapSource Picture { get; set; }
-            public string Description { get; set; }
-        }
-
-        public class MyNewViewModel
-        {
-            public ObservableCollection<MyModel> Images { get; set; }
-
-            public ICommand ButtonClicked { get; set; }
-
-        }
+        
     }
 
    

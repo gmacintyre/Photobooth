@@ -29,12 +29,10 @@ namespace Photobooth
 
         public PhotoAdded Photo;
 
-        public PhotoStrip(PhotoAdded photo, int max = 4)
+        public PhotoStrip(int max = 4)
         {
-            Photo = photo;
             Max = max;
             Pictures = new ObservableCollection<Image>();
-
         }
 
         //Implementation of INotifyPropertyChanged

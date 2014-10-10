@@ -3,10 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:photobooth="clr-namespace:Photobooth"
         Title="MainWindow" Height="964" Width="1199" Closing="Window_Closing">
-
-
     <Grid>
-
         <ItemsControl Name="ImageList" ItemsSource="{Binding ImageList}" Margin="53,30,887,28">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -14,11 +11,7 @@
                         <StackPanel Orientation="Horizontal">
                             <!--image and dimensions-->
                             <Grid Width="88" Height="55">
-                                <Image Source="{Binding Source}" 
-                                       RenderOptions.BitmapScalingMode="Fant"
-                                       Stretch="Fill"
-                                       Width="64"
-                                       Height="64"/>
+                                <Image Source="{Binding Source}" RenderOptions.BitmapScalingMode="Fant" Stretch="Fill" Width="64" Height="64"/>
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -27,27 +20,5 @@
         </ItemsControl>
         <ListBox x:Name="listbox1" Width="79" Height="81" Margin="788,365,0,0"  ItemsSource="{Binding Path=ListItems}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="4.28,2.1" />
         <Button x:Name="button_takePicture" Content="Take Picture" HorizontalAlignment="Left" FontSize="56" Height="539" Margin="897,222,0,0" VerticalAlignment="Top" Width="255" Click="button_takePictureClick"/>
-
-
-        <!--<ItemsControl ItemsSource="{Binding Path= Pictures" >
-            <ItemsControl.ItemTemplate>
-                <DataTemplate >
-                    <Image Source="{Binding _ImagePath}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate >
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>-->
-
-
-        <!--<Image x:Name="MiniImage1" Source="{Binding gina[0]}"  Margin="294,26,1056,734"  />
-        <Image x:Name="MiniImage2" Margin="294,273,1056,484"/>
-        <Image x:Name="MiniImage3" Margin="294,520,1056,245"/>
-        <Image x:Name="MiniImage4" Margin="294,749,1056,16"/>
-        <Image x:Name="MainImage" Margin="650,26,10,243"/>-->
-
     </Grid>
 </Window>
