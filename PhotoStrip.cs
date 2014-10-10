@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +10,21 @@ using System.Windows.Controls;
 
 namespace Photobooth
 {
-    public class PhotoStrip
+    public class PhotoStrip : INotifyPropertyChanged
     {
         public int Max { get; set; }
-        public List<Image> Pictures { get; set; }
+
+        private ObservableCollection<Image> _items;
+
+        public ObservableCollection<Image> Pictures
+        {
+            get { return _items; }
+            set
+            {
+                _items = value;   //Not the best way to populate your "items", but this is just for demonstration purposes.
+                this.RaisePropertyChanged("ListItems");
+            }
+        }
         public delegate bool PhotoAdded(Image image, int index);
 
         public PhotoAdded Photo;
@@ -20,8 +33,17 @@ namespace Photobooth
         {
             Photo = photo;
             Max = max;
-            Pictures = new List<Image>();
+            Pictures = new ObservableCollection<Image>();
 
+        }
+
+        //Implementation of INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Assign(PhotoStrip Photos, List<Image> ImageHolders)

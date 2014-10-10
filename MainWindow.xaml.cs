@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,27 +26,34 @@ namespace Photobooth
     {
         public NikonManager Manager { get; set; }
         public NikonDevice Device { get; set; }
-        public PhotoStrip photoStrip { get; set; }
+        public PhotoStrip photostrip { get; set; }
         public List<Image> ImageHolders { get; set; }
-
+        public ObservableCollection<String> Tests { get; set; }
         public List<Image> GUIImages { get; set; }
 
-
+        private MyViewModel _viewModel;
 
         public MainWindow()
         {
-            
+
             InitializeComponent();
-            photoStrip = new PhotoStrip(photoStrip_PhotoAdded, 5);
+
+            _viewModel = new MyViewModel();
+            this.DataContext = _viewModel;
+            Tests = new ObservableCollection<string>();
+
+
+            photostrip = new PhotoStrip(photoStrip_PhotoAdded, 5);
+
             Manager = new NikonManager(@"Type0010.md3");
-            GUIImages = new List<Image>{MiniImage1,MiniImage2, MiniImage3, MiniImage4, MainImage};
+            //GUIImages = new List<Image>{MiniImage1,MiniImage2, MiniImage3, MiniImage4, MainImage};
             button_takePicture.Content = "Connect\n Camera";
-            ImageHolders = new List<Image>{};
+            ImageHolders = new List<Image> {};
 
             Manager.DeviceAdded += new DeviceAddedDelegate(manager_DeviceAdded);
         }
 
-        void manager_DeviceAdded(NikonManager sender, NikonDevice device)
+        private void manager_DeviceAdded(NikonManager sender, NikonDevice device)
         {
             Device = device;
             // Wire device events
@@ -55,7 +63,7 @@ namespace Photobooth
             button_takePicture.Content = "Start";
             button_takePicture.FontSize = 56;
 
-            
+
 
             try
             {
@@ -72,26 +80,31 @@ namespace Photobooth
             Manager.Shutdown();
         }
 
-        void device_ImageReady(NikonDevice sender, NikonImage image)
+        private void device_ImageReady(NikonDevice sender, NikonImage image)
         {
+            Tests.Add(image.Number.ToString());
             Console.WriteLine("Magic");
-            photoStrip.Push(new Image{Source = LoadImage(image.Buffer)});
+
+            
+
+            _viewModel.ListItems = Tests;
+
+            photostrip.Push(new Image {Source = LoadImage(image.Buffer)});
+
+           
         }
 
         private void button_takePictureClick(object sender, RoutedEventArgs e)
         {
-            //for (var i = 0; i < 4; i++)
-            //{
-                try
-                {
-                    Device.Capture();
-                }
-                catch (NikonException ex)
-                {
+            try
+            {
+                Device.Capture();
+                ImageList.ItemsSource = photostrip.Pictures;
+            }
+            catch (NikonException ex)
+            {
 
-                }
-            //}
-            
+            }
         }
 
         private static BitmapImage LoadImage(byte[] imageData)
@@ -114,9 +127,24 @@ namespace Photobooth
 
         public bool photoStrip_PhotoAdded(Image image, int index)
         {
-           
-            GUIImages[index].Source = image.Source;
+
+            //GUIImages[index].Source = image.Source;
             return false;
         }
+        public class MyModel
+        {
+            public BitmapSource Picture { get; set; }
+            public string Description { get; set; }
+        }
+
+        public class MyNewViewModel
+        {
+            public ObservableCollection<MyModel> Images { get; set; }
+
+            public ICommand ButtonClicked { get; set; }
+
+        }
     }
+
+   
 }
