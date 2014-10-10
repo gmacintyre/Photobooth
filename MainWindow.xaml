@@ -1,8 +1,15 @@
 ﻿<Window x:Class="Photobooth.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="1013" Width="1684" Closing="Window_Closing">
     <Grid>
-        
+        <Button x:Name="button_takePicture" Content="Take Picture" HorizontalAlignment="Left" FontSize="56" Height="539" Margin="10,10,0,0" VerticalAlignment="Top" Width="255" Click="button_takePictureClick"/>
+
+        <Image x:Name="MiniImage1" Source="{Binding gina[0]}"  Margin="294,26,1056,734"  />
+        <Image x:Name="MiniImage2" Margin="294,273,1056,484"/>
+        <Image x:Name="MiniImage3" Margin="294,520,1056,245"/>
+        <Image x:Name="MiniImage4" Margin="294,749,1056,16"/>
+        <Image x:Name="MainImage" Margin="650,26,10,243"/>
+
     </Grid>
 </Window>
