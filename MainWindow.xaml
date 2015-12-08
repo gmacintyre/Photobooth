@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:photobooth="clr-namespace:Photobooth"
-        Title="MainWindow" Height="908" Width="1646" Closing="Window_Closing" 
-        x:Name="mainWnd">
+        Title="MainWindow" Height="861.732" Width="1490.776" Closing="Window_Closing" 
+        x:Name="mainWnd" Background="#2d3847">
     <Grid Margin="0,0,10,10">
-        <ItemsControl Name="ImageList" ItemsSource="{Binding ImageList}" Margin="10,10,1352,10">
+        <ItemsControl Name="ImageList" ItemsSource="{Binding ImageList}" Margin="7,0,1313,109">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="1" BorderBrush="#FFD0D1D7" Padding="5" Margin="10,10,0,0">
@@ -19,25 +19,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
-        <!--<ItemsControl Name="LiveImage" ItemsSource="{Binding LiveImage}" Margin="281,10,280,10">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderThickness="1" BorderBrush="#FFD0D1D7" Padding="5" Margin="10,10,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            
-                            <Grid Width="88" Height="55">
-                                <Image Source="{Binding Source}" RenderOptions.BitmapScalingMode="Fant" Stretch="Fill" Width="64" Height="64"/>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>-->
-        <Image Margin="281,10,280,10" Name="LiveImage" Source="{Binding ElementName=MainWindow, Path=_LiveView.CurrentImage}"></Image>
-
-        <ListBox x:Name="listbox1" Width="79" Height="81" Margin="1468,618,0,0"  ItemsSource="{Binding Path=ListItems}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="4.28,2.1" />
-        <Button x:Name="button_takePicture" Content="Take Picture" HorizontalAlignment="Left" FontSize="56" Height="577" Margin="1353,10,0,0" VerticalAlignment="Top" Width="255" Click="button_takePictureClick"/>
-        <Button Content="Live View" HorizontalAlignment="Left" Margin="1353,730,0,0" VerticalAlignment="Top" Width="265" Height="66" Click="button_startLiveView"/>
+        <Image Margin="355,10,10,0" Name="LiveImage" Source="{Binding ElementName=MainWindow, Path=_LiveView.CurrentImage}"></Image>
+        <Button x:Name="button_takePicture" Background="#68c8c6" Content="Start" HorizontalAlignment="Left" FontSize="40" Height="81" Margin="28,740,0,0" VerticalAlignment="Top" Width="193" Click="button_takePictureClick"/>
     </Grid>
 </Window>

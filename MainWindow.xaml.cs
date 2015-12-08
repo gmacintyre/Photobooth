@@ -45,10 +45,10 @@ namespace Photobooth
             _LiveView = new LiveView();
             photostrip = new PhotoStrip();
 
-            Manager = new NikonManager(@"Type0010.md3");
+            Manager = new NikonManager(@"Type0004.md3");
             button_takePicture.Content = "Connect\n Camera";
             button_takePicture.IsEnabled = false;
-
+            
             Manager.DeviceAdded += new DeviceAddedDelegate(manager_DeviceAdded);
         }
 
@@ -69,7 +69,7 @@ namespace Photobooth
             // Set live view image on picture box
             if (image != null)
             {
-                LiveImage.Source = LoadImage(image.JpegBuffer);
+                LiveImage.Source = photostrip.LoadWindowsControlImage(image.JpegBuffer);
             }
         }
 
@@ -81,7 +81,7 @@ namespace Photobooth
             // Enable buttons
             button_takePicture.IsEnabled = true;
             button_takePicture.Content = "Start";
-            button_takePicture.FontSize = 56;
+            ToggleLiveView();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -92,23 +92,41 @@ namespace Photobooth
         private void device_ImageReady(NikonDevice sender, NikonImage image)
         {
             Console.WriteLine("Image Ready");
-            photostrip.Push(new Image {Source = LoadImage(image.Buffer)});
+            photostrip.Push(image);
+             //fill dat strip
+            LiveImage.Source = photostrip.LoadWindowsControlImage(image.Buffer);
+            if(photostrip.Pictures.Count() != photostrip.Max) TakePicture();
+            else photostrip.DrawStrip();
         }
 
         private void button_takePictureClick(object sender, RoutedEventArgs e)
         {
+            photostrip = new PhotoStrip();
+            TakePicture();
+        }
+
+        public void TakePicture()
+        {
+            //Thread.Sleep(2000);
             try
             {
+                //Device
                 Device.Capture();
                 ImageList.ItemsSource = photostrip.Pictures;
             }
             catch (NikonException ex)
             {
+                Console.Write(ex.Message);
 
             }
         }
 
         private void button_startLiveView(object sender, RoutedEventArgs e)
+        {
+            ToggleLiveView();   
+        }
+
+        public void ToggleLiveView()
         {
             if (Device == null)
             {
@@ -127,23 +145,7 @@ namespace Photobooth
             }
         }
 
-        private static BitmapImage LoadImage(byte[] imageData)
-        {
-            if (imageData == null || imageData.Length == 0) return null;
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageData))
-            {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
-            }
-            image.Freeze();
-            return image;
-        }
+        
 
         
     }
